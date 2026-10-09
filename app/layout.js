@@ -1,22 +1,53 @@
 import './globals.css'
 import { Nav, ProgressBar, BackToTop } from './components/ClientUI'
-import { Background } from './components/Background'
+
+// Когда купишь домен — замени это на свой (например https://synergystacks.com)
+const SITE_URL = 'https://synergystacks.pages.dev'
 
 export const metadata = {
-  title: 'SynergyStacks — Evidence-Based Supplement Combinations',
-  description: 'Every claim links to a study. SynergyStacks is a reference library of evidence-based supplement combinations — Carnitine × Caffeine, Creatine × Fenugreek, Berberine × Chromium, and more.',
-  metadataBase: new URL('https://synergystacks.example'),
+  metadataBase: new URL(SITE_URL),
+
+  title: {
+    default: 'SynergyStacks — Supplement Research Library',
+    template: '%s | SynergyStacks',
+  },
+
+  description:
+    'A reference library of supplement ingredients, biological pathways, and combinations — with the evidence behind each claim and the gaps that remain.',
+
+  applicationName: 'SynergyStacks',
+
+  alternates: {
+    canonical: '/',
+  },
+
   openGraph: {
     type: 'website',
     siteName: 'SynergyStacks',
-    title: 'SynergyStacks — Evidence-Based Supplement Combinations',
-    description: 'One plus one equals three. The research-backed guide to supplement synergy.',
-    url: 'https://synergystacks.example/',
+    title: 'SynergyStacks — Supplement Research Library',
+    description:
+      'Explore supplement ingredients, biological pathways, and the evidence behind common combinations.',
+    url: SITE_URL,
+    locale: 'en_US',
   },
+
   twitter: {
-    card: 'summary_large_image',
-    title: 'SynergyStacks — Evidence-Based Supplement Combinations',
-    description: 'One plus one equals three. The research-backed guide to supplement synergy.',
+    card: 'summary',
+    title: 'SynergyStacks — Supplement Research Library',
+    description:
+      'Explore supplement ingredients, research findings and biological pathways.',
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
   },
 }
 
@@ -26,35 +57,52 @@ export const viewport = {
   initialScale: 1,
 }
 
+const footerLinks = [
+  ['HOME', '/'],
+  ['GOALS', '/goals/'],
+  ['INGREDIENTS', '/ingredients/'],
+  ['MECHANISMS', '/mechanisms/'],
+  ['BIOMARKERS', '/biomarkers/'],
+  ['STACKS', '/stacks/'],
+  ['SEARCH', '/search/'],
+  ['ABOUT', '/about/'],
+]
+
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <div className="glow"></div>
-        <Background />
-        <div className="grain" aria-hidden="true"></div>
-        <ProgressBar />
+        <a className="skip-link" href="#main-content">
+          Skip to content
+        </a>
+
+        <div className="glow" aria-hidden="true" />
+        <div className="grain" aria-hidden="true" />
 
         <Nav />
+        <ProgressBar />
 
-        <main>{children}</main>
+        <main id="main-content">{children}</main>
 
         <footer>
-<div className="foot-links">
-  <a href="/">HOME</a>
-  <a href="/goals">GOALS</a>
-  <a href="/ingredients">INGREDIENTS</a>
-  <a href="/mechanisms">MECHANISMS</a>
-  <a href="/biomarkers">BIOMARKERS</a>
-  <a href="/stacks">STACKS</a>
-  <a href="/search">SEARCH</a>
-  <a href="/about">ABOUT</a>
-</div>
-          SYNERGYSTACKS / EVIDENCE-BASED SUPPLEMENT COMBINATIONS
+          <nav className="foot-links" aria-label="Footer navigation">
+            {footerLinks.map(([label, href]) => (
+              <a key={href} href={href}>
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="footer-brand">
+            SYNERGYSTACKS / SUPPLEMENT RESEARCH LIBRARY
+          </div>
+
           <div className="disclaimer">
-            This site is for educational purposes only and does not provide medical advice.
-            Supplement effects vary between individuals. Consult a healthcare provider
-            before starting any new supplement regimen. Some links may be affiliate links.
+            Educational reference only — not medical advice. Consult a
+            qualified healthcare professional before starting any supplement,
+            especially if you take prescription medication, are pregnant, or
+            have a medical condition. Some product links may be affiliate
+            links.
           </div>
         </footer>
 

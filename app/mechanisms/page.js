@@ -1,69 +1,79 @@
-import { mechanisms } from '../data/mechanisms'
-import { MechanismCard } from '../components/MechanismCard'
+import { mechanisms, mechanismCategories } from '../data/mechanisms'
+import { MechanismExplorer } from '../components/MechanismExplorer'
 
 export const metadata = {
-  title: 'All Mechanisms — SynergyStacks',
-  description: 'Every biological pathway in the SynergyStacks database — evidence level, biomarkers, and ingredients that affect it.',
+  title: 'Mechanism Database',
+  description:
+    'Explore biological pathways tracked by SynergyStacks — hormonal, metabolic, neurotransmitter, cellular — with evidence level and linked biomarkers.',
+  alternates: {
+    canonical: '/mechanisms/',
+  },
 }
 
-const CATEGORY_ORDER = [
-  { key: 'hormonal',        label: 'Hormonal' },
-  { key: 'metabolic',       label: 'Metabolic' },
-  { key: 'neurotransmitter', label: 'Neurotransmitter' },
-  { key: 'cellular',        label: 'Cellular' },
-  { key: 'vascular',        label: 'Vascular' },
-  { key: 'structural',      label: 'Structural' },
-  { key: 'gut',             label: 'Gut' },
-  { key: 'immune',          label: 'Immune' },
-]
-
 export default function MechanismsIndexPage() {
-  const grouped = {}
-  Object.entries(mechanisms).forEach(([slug, m]) => {
-    const cat = m.category || 'other'
-    if (!grouped[cat]) grouped[cat] = []
-    grouped[cat].push([slug, m])
-  })
-
   const total = Object.keys(mechanisms).length
+
+  const categories = new Set(
+    Object.values(mechanisms).map((m) => m.category || 'other')
+  )
 
   return (
     <>
-      <section style={{ padding: '140px 0 40px' }}>
+      <section className="ix-hero">
         <div className="container">
-          <div className="crumbs">
+          <nav className="crumbs" aria-label="Breadcrumb">
             <a href="/">HOME</a>
-            <span className="sep">/</span>
-            <span className="cur">MECHANISMS</span>
+            <span className="sep" aria-hidden="true">/</span>
+            <span className="cur" aria-current="page">MECHANISMS</span>
+          </nav>
+
+          <div className="kicker">
+            <span className="dot" />
+            DATABASE · {total} PATHWAYS
           </div>
-          <div className="kicker"><span className="dot"></span>DATABASE · {total} PATHWAYS</div>
-          <h1 style={{ fontSize: 'clamp(40px,6.5vw,90px)' }}>
+
+          <h1 className="ix-page-title">
             <span className="line"><span>HOW IT</span></span>
             <span className="line"><span className="lime">WORKS.</span></span>
           </h1>
-          <p className="hero-copy">
-            Every biological pathway we track. Each mechanism links to the biomarkers it affects,
-            the goals it serves, and the ingredients that influence it. Evidence level is shown on every card.
+
+          <p className="hero-copy ix-hero-copy">
+            Every biological pathway in the database. Each entry links
+            to the biomarkers it affects and the ingredients that
+            influence it. Evidence labels describe how strong the
+            human data is — not how strong a mechanism sounds.
           </p>
+
+          <div className="ix-overview" aria-label="Database overview">
+            <div className="ix-overview-item">
+              <strong>{total}</strong>
+              <span>PATHWAYS</span>
+            </div>
+            <div className="ix-overview-item">
+              <strong>{categories.size}</strong>
+              <span>CATEGORIES</span>
+            </div>
+            <div className="ix-overview-item">
+              <strong>OPEN</strong>
+              <span>REFERENCE LIBRARY</span>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section style={{ paddingTop: 20 }}>
+      <section className="ix-catalog-section">
         <div className="container">
-          {CATEGORY_ORDER.map(({ key, label }) => {
-            const items = grouped[key]
-            if (!items || items.length === 0) return null
-            return (
-              <div key={key} style={{ marginBottom: 56 }}>
-                <h2 className="ing-group-title">{label}</h2>
-                <div className="mech-grid">
-                  {items.map(([slug, m]) => (
-                    <MechanismCard key={slug} slug={slug} mechanism={m} />
-                  ))}
-                </div>
-              </div>
-            )
-          })}
+          <div className="ix-section-heading">
+            <div>
+              <div className="ix-eyebrow">EXPLORE THE DATABASE</div>
+              <h2>Find a <span>pathway.</span></h2>
+            </div>
+            <a className="ix-method-link" href="/about/">
+              How we evaluate evidence <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <MechanismExplorer mechanisms={mechanisms} />
         </div>
       </section>
     </>
