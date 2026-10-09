@@ -1,3 +1,4 @@
+
 'use client'
 
 import { useEffect, useMemo, useState } from 'react'
@@ -44,18 +45,15 @@ function getCategoryLabel(category) {
 }
 
 function getSearchText(slug, ingredient) {
-  return normalize(
-    [
-      slug,
-      ingredient.label,
-      ingredient.short,
-      ingredient.description,
-      getCategoryLabel(ingredient.category),
-      ...(ingredient.synonyms || []),
-      ...(ingredient.forms || []),
-      ...(ingredient.affects || []),
-    ].join(' ')
-  )
+  return normalize([
+    slug,
+    ingredient.label,
+    ingredient.short,
+    ingredient.description,
+    getCategoryLabel(ingredient.category),
+    ...(ingredient.forms || []),
+    ...(ingredient.affects || []),
+  ].join(' '))
 }
 
 export function IngredientExplorer({ ingredients }) {
@@ -93,7 +91,10 @@ export function IngredientExplorer({ ingredients }) {
     if (!ready) return
 
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(favorites))
+      window.localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(favorites)
+      )
     } catch {
       // Favorites remain available for the current session.
     }
@@ -125,23 +126,38 @@ export function IngredientExplorer({ ingredients }) {
     const term = normalize(query)
 
     const result = entries.filter(([slug, item]) => {
-      if (term && !getSearchText(slug, item).includes(term)) {
+      if (
+        term &&
+        !getSearchText(slug, item).includes(term)
+      ) {
         return false
       }
 
-      if (category !== 'all' && (item.category || 'other') !== category) {
+      if (
+        category !== 'all' &&
+        (item.category || 'other') !== category
+      ) {
         return false
       }
 
-      if (evidence !== 'all' && item.evidenceLevel !== evidence) {
+      if (
+        evidence !== 'all' &&
+        item.evidenceLevel !== evidence
+      ) {
         return false
       }
 
-      if (price !== 'all' && item.priceBand !== price) {
+      if (
+        price !== 'all' &&
+        item.priceBand !== price
+      ) {
         return false
       }
 
-      if (favoritesOnly && !favorites.includes(slug)) {
+      if (
+        favoritesOnly &&
+        !favorites.includes(slug)
+      ) {
         return false
       }
 
@@ -159,20 +175,21 @@ export function IngredientExplorer({ ingredients }) {
 
       if (sort === 'forms') {
         const difference =
-          (b.forms?.length || 0) - (a.forms?.length || 0)
+          (b.forms?.length || 0) -
+          (a.forms?.length || 0)
 
         if (difference !== 0) return difference
       }
 
       if (sort === 'category') {
-        const difference = getCategoryLabel(a.category).localeCompare(
-          getCategoryLabel(b.category)
-        )
+        const difference = getCategoryLabel(a.category)
+          .localeCompare(getCategoryLabel(b.category))
 
         if (difference !== 0) return difference
       }
 
-      return a.label.localeCompare(b.label) || slugA.localeCompare(slugB)
+      return a.label.localeCompare(b.label) ||
+        slugA.localeCompare(slugB)
     })
 
     return result
@@ -219,7 +236,9 @@ export function IngredientExplorer({ ingredients }) {
             ⌕
           </span>
 
-          <span className="ix-sr-only">Search ingredients</span>
+          <span className="ix-sr-only">
+            Search ingredients
+          </span>
 
           <input
             type="search"
@@ -244,7 +263,8 @@ export function IngredientExplorer({ ingredients }) {
         <button
           type="button"
           className={
-            'ix-filter-toggle' + (filtersOpen ? ' is-active' : '')
+            'ix-filter-toggle' +
+            (filtersOpen ? ' is-active' : '')
           }
           onClick={() => setFiltersOpen((value) => !value)}
           aria-expanded={filtersOpen}
@@ -257,7 +277,9 @@ export function IngredientExplorer({ ingredients }) {
 
       <div
         id="ingredient-filters"
-        className={'ix-filters' + (filtersOpen ? ' is-open' : '')}
+        className={
+          'ix-filters' + (filtersOpen ? ' is-open' : '')
+        }
       >
         <label className="ix-field">
           <span>Category</span>
@@ -320,7 +342,8 @@ export function IngredientExplorer({ ingredients }) {
         <button
           type="button"
           className={
-            'ix-favorites-toggle' + (favoritesOnly ? ' is-active' : '')
+            'ix-favorites-toggle' +
+            (favoritesOnly ? ' is-active' : '')
           }
           onClick={() => setFavoritesOnly((value) => !value)}
           aria-pressed={favoritesOnly}
@@ -329,7 +352,9 @@ export function IngredientExplorer({ ingredients }) {
             {favoritesOnly ? '★' : '☆'}
           </span>
           Favorites
-          <span className="ix-favorite-count">{favorites.length}</span>
+          <span className="ix-favorite-count">
+            {favorites.length}
+          </span>
         </button>
 
         <div
@@ -337,8 +362,10 @@ export function IngredientExplorer({ ingredients }) {
           aria-live="polite"
           aria-atomic="true"
         >
-          <strong>{filtered.length}</strong>{' '}
-          {filtered.length === 1 ? 'ingredient' : 'ingredients'} found
+          <strong>{filtered.length}</strong>
+          {' '}
+          {filtered.length === 1 ? 'ingredient' : 'ingredients'}
+          {' '}found
         </div>
 
         {hasFilters && (
@@ -426,8 +453,7 @@ export function IngredientExplorer({ ingredients }) {
                   <div className="ix-meta">
                     {forms.length > 0 && (
                       <span>
-                        {forms.length}{' '}
-                        {forms.length === 1 ? 'form' : 'forms'}
+                        {forms.length} {forms.length === 1 ? 'form' : 'forms'}
                       </span>
                     )}
 
@@ -451,7 +477,9 @@ export function IngredientExplorer({ ingredients }) {
             ⌕
           </span>
           <h2>No ingredients found</h2>
-          <p>Try a different search term or remove one of the filters.</p>
+          <p>
+            Try a different search term or remove one of the filters.
+          </p>
           <button
             type="button"
             className="ix-reset-button"
@@ -463,10 +491,10 @@ export function IngredientExplorer({ ingredients }) {
       )}
 
       <p className="ix-disclaimer">
-        Evidence labels are inherited from the current database. They are
-        editorial classifications, not a substitute for evaluating the
-        evidence for a specific outcome, population, dose, and safety
-        profile.
+        Evidence labels are inherited from the current database.
+        They are editorial classifications, not a substitute for
+        evaluating the evidence for a specific outcome, population,
+        dose, and safety profile.
       </p>
     </div>
   )
